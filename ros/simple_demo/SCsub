@@ -1,0 +1,54 @@
+Import("env")
+
+ros_distro = "galactic"
+cpp_version = "-std=c++17"
+
+ros_include_path = "/opt/ros/galactic/include"
+ros_lib_path = "/opt/ros/galactic/lib"
+
+# Add all cpp files to the build
+env.add_source_files(env.modules_sources, "src/demos/*.cpp")
+env.add_source_files(env.modules_sources, "*.cpp")
+
+# These paths are relative to /modules/ros
+env.Append(CPPPATH=["include", ros_include_path])
+
+# LIBPATH and LIBS need to be set on the real "env" (not the clone)
+# to link the specified libraries to the Godot executable.
+
+# This is a path relative to /modules/where your .a libraries reside.
+# If you are copiling the module externally (not in the godot source tree),
+# these will need to be full paths.
+env.Append(LIBPATH=[ros_lib_path])
+
+# ROS needs c++ version compilier flag
+env.Append(CCFLAGS=[cpp_version])
+
+# Check with the documentation of the external library to see which library
+# files should be included/linked.
+env.Append(
+  LBS=[
+    'rclcpp',
+    'rcl',
+    'rcl_yaml_param_parser',
+    'rcutils',
+    'rcpputils',
+    'rmw',
+    'rmw_implementation',
+    'tracetools',
+    'ament_index_cpp',
+    'libstd_msgs__rosidl_typesupport_cpp',
+    'libsensor_msgs__rosidl_typesupport_cpp',
+    'rosidl_typesupport_cpp',
+    'rosidl_typesupport_c',
+    'rosidl_runtime_c',
+    'liblibstatistics_collector',
+    'statistics_msgs__rosidl_typesupport_cpp',
+    'rosgraph_msgs__rosidl_typesupport_cpp',
+    'rcl_interfaces__rosidl_typesupport_cpp',
+    'rcl_interfaces__rosidl_typesupport_c',
+    'rcl_interfaces__rosidl_generator_c',
+    'rcl_logging_interface',
+    'rcl_logging_spdlog',
+    'builtin_interfaces__rosidl_generator_c'
+])
